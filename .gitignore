@@ -1,5 +1,5 @@
 logs/*
-_multi_user_socket_template_env/*
+_multi_user_socket_pixi_template_env/*
 .vscode/*
 *.pyc
 local_settings.py
