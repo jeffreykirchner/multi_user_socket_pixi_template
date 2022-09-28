@@ -1,5 +1,5 @@
 """
-Django settings for multi_user_socket_template project.
+Django settings for multi_user_socket_pixi_template project.
 """
 
 from pathlib import Path
