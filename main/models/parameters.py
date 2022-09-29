@@ -15,6 +15,8 @@ class Parameters(models.Model):
 
     site_url = models.CharField(max_length = 200, default="http://localhost:8000")         #site URL used for display in emails
 
+    graph_sprite_sheet = models.CharField(max_length = 200, default="sprite_sheet.json")      #site sheet with graph images
+
     invitation_text = HTMLField(default="", verbose_name="Invitation Text")
     invitation_subject =  models.CharField(max_length = 200, default="", verbose_name="Invitation Subject")
 

@@ -22,6 +22,12 @@
         flex-direction:column-reverse;
     }
 
+    .field {
+        height: 600px;
+        background-color: white; 
+        width: 100%;
+    }
+
     .instructions{
         height: 300px;
         overflow-y:scroll;
@@ -39,21 +45,28 @@
 <!-- instructions -->
 <div class="row justify-content-lg-center mt-4" v-cloak v-show="session.current_experiment_phase == 'Instructions'">
     <div class="col-md">
-        {%include "subject/subject_home/instructions_card.html"%}
+        {%include "subject/subject_home/instructions/instructions_card.html"%}
     </div>
 </div>
 
-<!-- experiment -->
+<!-- chat -->
 <div class="row justify-content-lg-center mt-4" v-cloak v-show="session.current_experiment_phase != 'Done'">
     <div class="col-md-9">
-        {%include "subject/subject_home/graph_card.html"%}                
+        {%include "subject/subject_home/chat/chat_card.html"%}                
     </div>
     <div class="col-md-3">
         <div class="row">
             <div class="col-md">
-                {%include "subject/subject_home/summary_card.html"%}
+                {%include "subject/subject_home/summary/summary_card.html"%}
             </div>            
         </div>     
+    </div>
+</div>
+
+<!-- field -->
+<div class="row justify-content-lg-center mt-4" v-cloak v-show="session.current_experiment_phase != 'Done'">
+    <div class="col-">
+        {%include "subject/subject_home/graph/graph_card.html"%}                
     </div>
 </div>
 

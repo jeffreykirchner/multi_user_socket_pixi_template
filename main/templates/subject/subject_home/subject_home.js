@@ -28,12 +28,17 @@ var app = Vue.createApp({
                     chat_list_to_display : [],                //list of chats to display on screen
 
                     end_game_modal_visible : false,
-                    avatar_choice_modal_visible : false,
 
                     instruction_pages : {{instruction_pages|safe}},
 
                     // modals
                     endGameModal : null,
+
+                    //pixi
+                    pixi_app : null,
+                    canvas_width  : null,
+                    canvas_height : null,
+                    tilingSprite : null,
                 }},
     methods: {
 
@@ -114,16 +119,18 @@ var app = Vue.createApp({
          */
          doFirstLoad()
          {           
-             app.endGameModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('endGameModal'), {keyboard: false})           
-             document.getElementById('endGameModal').addEventListener('hidden.bs.modal', app.hideEndGameModal);
+            app.endGameModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('endGameModal'), {keyboard: false})           
+            document.getElementById('endGameModal').addEventListener('hidden.bs.modal', app.hideEndGameModal);
 
-             {%if session.parameter_set.test_mode%} setTimeout(this.doTestMode, this.randomNumber(1000 , 1500)); {%endif%}
+            {%if session.parameter_set.test_mode%} setTimeout(this.doTestMode, this.randomNumber(1000 , 1500)); {%endif%}
 
             // if game is finished show modal
             if(app.session.finished)
             {
                 this.showEndGameModal();
             }
+
+            app.setupPixi()
          },
 
         /** send winsock request to get session info
@@ -247,12 +254,6 @@ var app = Vue.createApp({
 
         /** hide choice grid modal modal
         */
-        hideChoiceGridModal(){
-            this.avatar_choice_modal_visible=false;
-        },
-
-        /** hide choice grid modal modal
-        */
         hideEndGameModal(){
             this.end_game_modal_visible=false;
         },
@@ -266,6 +267,7 @@ var app = Vue.createApp({
         {%include "subject/subject_home/summary/summary_card.js"%}
         {%include "subject/subject_home/test_mode/test_mode.js"%}
         {%include "subject/subject_home/instructions/instructions_card.js"%}
+        {%include "subject/subject_home/graph/pixi_setup.js"%}
     
         /** clear form error messages
         */

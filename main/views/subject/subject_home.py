@@ -59,6 +59,7 @@ class SubjectHomeView(View):
                                "session_player_json" : json.dumps(session_player.json(), cls=DjangoJSONEncoder),
                                "session" : session,
                                "parameters" : parameters,
+                               "graph_sprite_sheet" : parameters.graph_sprite_sheet,
                                "session_json":json.dumps(session.json_for_subject(session_player), cls=DjangoJSONEncoder)})
     
     @method_decorator(login_required)
