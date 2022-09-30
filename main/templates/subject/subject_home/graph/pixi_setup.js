@@ -6,7 +6,7 @@
 setupPixi(){    
     app.resetPixiApp();
     PIXI.Loader.shared.add("{% static graph_sprite_sheet %}")
-                      .add('bg_tex',"{% static 'background_tile_a_1024.png'%}")
+                      .add('bg_tex',"{% static 'background_tile_low.jpg'%}")
                       .load(app.setupPixiSheets);
 },
 
@@ -77,9 +77,15 @@ setupPixiSheets(){
     app.pixi_app.stage.addChild(app.tilingSprite);
 
     app.pixi_app.ticker.add(app.gameLoop);
+
+    const gr  = new PIXI.Graphics();
+    gr.beginFill(0xffffff);
+    gr.drawCircle(25, 25, 10);
+    gr.endFill();
+    app.pixi_app.stage.addChild(gr)
 },
 
 gameLoop(delta){
-    app.tilingSprite.tilePosition.x += 1;
-    app.tilingSprite.tilePosition.y += 1;
+    //app.tilingSprite.tilePosition.x += (1.1 * delta);
+    //app.tilingSprite.tilePosition.y += (2.344 * delta);
 },
