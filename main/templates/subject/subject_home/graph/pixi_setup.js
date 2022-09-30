@@ -67,6 +67,16 @@ setupPixiSheets(){
     //app.pixi_app.screen.width,
     //app.pixi_app.screen.height,
 
+    // let background = new PIXI.Graphics();
+    // background.beginFill(0xffffff);
+    // background.drawRect(0, 0, canvas.width, canvas.height);
+    // background.endFill();
+
+    // background.interactive = true;
+    // background.on("pointerup", app.handleStagePointerUp)
+    //           .on("pointermove", app.handleStagePointerMove);
+    // app.$data.pixi_app.stage.addChild(background);
+
     app.tilingSprite = new PIXI.TilingSprite(
         PIXI.Loader.shared.resources['bg_tex'].texture,
         app.pixi_app.screen.width,
@@ -74,18 +84,76 @@ setupPixiSheets(){
     );
     app.tilingSprite.position.set(0,0);
 
+    app.tilingSprite.interactive = true;
+    app.tilingSprite.on("pointerup", app.handleStagePointerUp);
+
     app.pixi_app.stage.addChild(app.tilingSprite);
 
     app.pixi_app.ticker.add(app.gameLoop);
-
-    const gr  = new PIXI.Graphics();
-    gr.beginFill(0xffffff);
-    gr.drawCircle(25, 25, 10);
-    gr.endFill();
-    app.pixi_app.stage.addChild(gr)
+    
+    app.pixi_target = new PIXI.Graphics();
+    app.pixi_target.lineStyle(3, 0x000000);
+    app.pixi_target.alpha = 0.33;
+    app.pixi_target.drawCircle(0, 0, 10);
+    app.pixi_app.stage.addChild(app.pixi_target)
 },
 
 gameLoop(delta){
-    //app.tilingSprite.tilePosition.x += (1.1 * delta);
-    //app.tilingSprite.tilePosition.y += (2.344 * delta);
+    app.movePlayer(delta);
+    app.updateOffsets(delta);    
 },
+
+movePlayer(delta){
+
+    if(app.target_location.x !=  app.current_location.x ||
+       app.target_location.y !=  app.current_location.y )
+    {
+        
+        let noX = false;
+        let noY = false;
+        let temp_move_speed = app.move_speed * delta;
+
+        let temp_angle = Math.atan2(app.target_location.y - app.current_location.y,
+                                    app.target_location.x - app.current_location.x)
+
+        if(!noY){
+            if(Math.abs(app.target_location.y - app.current_location.y) < temp_move_speed)
+                app.current_location.y = app.target_location.y;
+            else
+                app.current_location.y += temp_move_speed * Math.sin(temp_angle);
+        }
+
+        if(!noX){
+            if(Math.abs(app.target_location.x - app.current_location.x) < temp_move_speed)
+                app.current_location.x = app.target_location.x;
+            else
+                app.current_location.x += temp_move_speed * Math.cos(temp_angle);        
+        }
+    }
+
+},
+
+updateOffsets(delta){
+    let x_offset = -app.current_location.x + app.pixi_app.screen.width/2;
+    let y_offset = -app.current_location.y + app.pixi_app.screen.height/2;
+
+    app.tilingSprite.tilePosition.x = (0 + x_offset);
+    app.tilingSprite.tilePosition.y = (0 + y_offset);
+    
+    app.pixi_target.x = app.target_location.x + x_offset;
+    app.pixi_target.y = app.target_location.y + y_offset;
+},
+
+/**
+ *pointer up on stage
+ */
+ handleStagePointerUp(event){
+    let x_offset = -app.current_location.x + app.pixi_app.screen.width/2;
+    let y_offset = -app.current_location.y + app.pixi_app.screen.height/2;
+
+    //console.log('Stage up: ' + event);
+    //app.turnOffHighlights();
+    app.target_location.x = event.data.global.x-x_offset;
+    app.target_location.y = event.data.global.y-y_offset
+},
+

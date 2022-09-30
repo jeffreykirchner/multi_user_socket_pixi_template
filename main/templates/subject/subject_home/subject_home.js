@@ -39,9 +39,9 @@ var app = Vue.createApp({
                     canvas_width  : null,
                     canvas_height : null,
                     tilingSprite : null,
-                    target_location : {x:25,y:25},
+                    target_location : {x:0,y:0},
                     current_location : {x:0,y:0},
-                    move_speed : 2,
+                    move_speed : 5,
                 }},
     methods: {
 
