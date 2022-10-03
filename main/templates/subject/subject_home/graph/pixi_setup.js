@@ -70,7 +70,8 @@ setupPixiSheets(){
     app.background = new PIXI.Graphics();
     app.background.beginFill(0xffffff);
     app.background.drawRect(0, 0, 10000, 10000);
-    app. background.endFill();
+    app.background.endFill();
+    app.background.scale.set(app.pixi_scale, app.pixi_scale);
 
     // background.interactive = true;
     // background.on("pointerup", app.handleStagePointerUp)
@@ -97,6 +98,7 @@ setupPixiSheets(){
         app.pixi_target.lineStyle(3, 0x000000);
         app.pixi_target.alpha = 0.33;
         app.pixi_target.drawCircle(0, 0, 10);
+        app.pixi_target.scale.set(app.pixi_scale, app.pixi_scale);
         app.pixi_app.stage.addChild(app.pixi_target)
     }
 },
@@ -114,7 +116,7 @@ movePlayer(delta){
         
         let noX = false;
         let noY = false;
-        let temp_move_speed = app.move_speed * delta;
+        let temp_move_speed = (app.move_speed * delta) * app.pixi_scale;
 
         let temp_angle = Math.atan2(app.target_location.y - app.current_location.y,
                                     app.target_location.x - app.current_location.x)
@@ -161,8 +163,8 @@ updateOffsets(delta){
     //app.turnOffHighlights();
     if(app.pixi_mode=="subject")
     {
-        app.target_location.x = event.data.global.x-x_offset;
-        app.target_location.y = event.data.global.y-y_offset
+        app.target_location.x = event.data.global.x - x_offset;
+        app.target_location.y = event.data.global.y - y_offset
     }
 },
 
