@@ -16,6 +16,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from main.decorators import user_is_owner
 
 from main.models import Session
+from main.models import Parameters
 
 from main.forms import ImportParametersForm
 from main.forms import ParameterSetForm
@@ -36,6 +37,7 @@ class StaffSessionParametersView(SingleObjectMixin, View):
         handle get requests
         '''
         session = self.get_object()
+        parameters = Parameters.objects.first()
 
         parameterset_player_form = ParameterSetPlayerForm()
 
@@ -61,6 +63,7 @@ class StaffSessionParametersView(SingleObjectMixin, View):
                                "page_key" : f'{self.websocket_path}-{session.id}',
                                "number_of_player_types" : range(4),
                                "session" : session,
+                               "graph_sprite_sheet" : parameters.graph_sprite_sheet,
                                "session_json":json.dumps(session.json(), cls=DjangoJSONEncoder)
                                })
     

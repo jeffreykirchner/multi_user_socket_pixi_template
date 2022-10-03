@@ -36,6 +36,16 @@ var app = Vue.createApp({
 
                     //form paramters
                     session_import : null,
+
+                    //pixi
+                    pixi_app : null,
+                    canvas_width  : null,
+                    canvas_height : null,
+                    tilingSprite : null,
+                    target_location : {x:0,y:0},
+                    current_location : {x:0,y:0},
+                    move_speed : 5,
+                    pixi_mode : "staff",
                 }},
     methods: {
 
@@ -112,6 +122,8 @@ var app = Vue.createApp({
             document.getElementById('editParametersetModal').addEventListener('hidden.bs.modal', app.hideEditParameterset);
             document.getElementById('editParametersetPlayerModal').addEventListener('hidden.bs.modal', app.hideEditParametersetPlayer);
 
+            app.setupPixi()
+
         },
 
         /** take create new session
@@ -151,7 +163,8 @@ var app = Vue.createApp({
         {%include "staff/staff_session_parameters/control/control.js"%}
         {%include "staff/staff_session_parameters/players/players.js"%}
         {%include "js/help_doc.js"%}
-    
+
+        {%include "subject/subject_home/graph/pixi_setup.js"%}
         /** clear form error messages
         */
         clearMainFormErrors(){

@@ -42,6 +42,7 @@ var app = Vue.createApp({
                     target_location : {x:0,y:0},
                     current_location : {x:0,y:0},
                     move_speed : 5,
+                    pixi_mode : "subject",
                 }},
     methods: {
 
