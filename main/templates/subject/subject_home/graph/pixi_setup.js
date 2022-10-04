@@ -69,9 +69,10 @@ setupPixiSheets(){
 
     app.background = new PIXI.Graphics();
     app.background.beginFill(0xffffff);
-    app.background.drawRect(0, 0, 10000, 10000);
+    app.background.drawRect(0, 0, app.stage_width, app.stage_height);
     app.background.endFill();
-    app.background.scale.set(app.pixi_scale, app.pixi_scale);
+    //app.background.scale.set(app.pixi_scale, app.pixi_scale);
+    //app.background.pivot.set(app.stage_width/2, app.stage_height/2);
 
     // background.interactive = true;
     // background.on("pointerup", app.handleStagePointerUp)
@@ -98,8 +99,8 @@ setupPixiSheets(){
         app.pixi_target.lineStyle(3, 0x000000);
         app.pixi_target.alpha = 0.33;
         app.pixi_target.drawCircle(0, 0, 10);
-        app.pixi_target.scale.set(app.pixi_scale, app.pixi_scale);
-        app.pixi_app.stage.addChild(app.pixi_target)
+        //app.pixi_target.scale.set(app.pixi_scale, app.pixi_scale);
+        app.background.addChild(app.pixi_target)
     }
 },
 
@@ -110,6 +111,22 @@ gameLoop(delta){
 
 updateZoom(){
     app.background.scale.set(app.pixi_scale, app.pixi_scale);
+    //app.background.x += (app.background.x*app.pixi_scale);
+   // app.background.y += (app.background.y*app.pixi_scale);
+
+    if(app.pixi_mode=="subject")
+    {
+        app.pixi_target.scale.set(app.pixi_scale, app.pixi_scale);
+
+        // app.pixi_target.x *= app.pixi_scale;
+        // app.pixi_target.y *= app.pixi_scale;
+
+        // app.current_location.x *= app.pixi_scale;
+        // app.current_location.y *= app.pixi_scale;
+
+        // app.target_location.x *= app.pixi_scale;
+        // app.target_location.y *= app.pixi_scale;
+    }
 },
 
 movePlayer(delta){
@@ -120,7 +137,7 @@ movePlayer(delta){
         
         let noX = false;
         let noY = false;
-        let temp_move_speed = (app.move_speed * delta) * app.pixi_scale;
+        let temp_move_speed = (app.move_speed * delta);
 
         let temp_angle = Math.atan2(app.target_location.y - app.current_location.y,
                                     app.target_location.x - app.current_location.x)
@@ -143,32 +160,38 @@ movePlayer(delta){
 },
 
 updateOffsets(delta){
-    let x_offset = -app.current_location.x + app.pixi_app.screen.width/2;
-    let y_offset = -app.current_location.y + app.pixi_app.screen.height/2;
+    
+    offset = app.getOffset();
 
-    app.background.x = (0 + x_offset);
-    app.background.y = (0 + y_offset);
+    app.background.x = -offset.x;
+    app.background.y = -offset.y;
     
     if(app.pixi_mode=="subject")
     {
-        app.pixi_target.x = app.target_location.x + x_offset;
-        app.pixi_target.y = app.target_location.y + y_offset;
+        app.pixi_target.x = app.target_location.x;
+        app.pixi_target.y = app.target_location.y;
     }
+},
+
+getOffset(){
+    return {x:app.current_location.x * app.pixi_scale - app.pixi_app.screen.width/2,
+            y:app.current_location.y * app.pixi_scale - app.pixi_app.screen.height/2};
 },
 
 /**
  *pointer up on stage
  */
  handleStagePointerUp(event){
-    let x_offset = -app.current_location.x + app.pixi_app.screen.width/2;
-    let y_offset = -app.current_location.y + app.pixi_app.screen.height/2;
+
+    offset = app.getOffset();
 
     //console.log('Stage up: ' + event);
     //app.turnOffHighlights();
     if(app.pixi_mode=="subject")
     {
-        app.target_location.x = event.data.global.x - x_offset;
-        app.target_location.y = event.data.global.y - y_offset
+        let local_pos = event.data.getLocalPosition(event.currentTarget);
+        app.target_location.x = local_pos.x;
+        app.target_location.y = local_pos.y;
     }
 },
 

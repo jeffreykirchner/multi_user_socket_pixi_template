@@ -47,6 +47,8 @@ var app = Vue.createApp({
                     move_speed : 5,
                     pixi_mode : "staff",
                     pixi_scale : 1,
+                    stage_width : 10000,
+                    stage_height : 10000,
                 }},
     methods: {
 
