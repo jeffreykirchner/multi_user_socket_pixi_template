@@ -108,6 +108,10 @@ gameLoop(delta){
     app.updateOffsets(delta);    
 },
 
+updateZoom(){
+    app.background.scale.set(app.pixi_scale, app.pixi_scale);
+},
+
 movePlayer(delta){
 
     if(app.target_location.x !=  app.current_location.x ||

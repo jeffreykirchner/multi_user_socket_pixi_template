@@ -46,6 +46,7 @@ var app = Vue.createApp({
                     current_location : {x:0,y:0},
                     move_speed : 5,
                     pixi_mode : "staff",
+                    pixi_scale : 1,
                 }},
     methods: {
 
