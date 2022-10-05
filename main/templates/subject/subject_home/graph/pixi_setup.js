@@ -67,11 +67,7 @@ setupPixiSheets(){
     );
     tilingSprite.position.set(0,0);
 
-    
-
     app.background.addChild(tilingSprite);
-
-    app.pixi_app.ticker.add(app.gameLoop);
     
     //subject controls
     if(app.pixi_mode=="subject")
@@ -89,13 +85,73 @@ setupPixiSheets(){
 
     // staff controls
     if(app.pixi_mode=="staff"){
+
+        app.scroll_button_up = app.addScrollButton({w:50, h:30, x:app.pixi_app.screen.width/2, y:30}, 
+                                                   {scroll_direction:{x:0,y:-app.scroll_speed}}, 
+                                                   "↑↑↑");
+        app.scroll_button_down = app.addScrollButton({w:50, h:30, x:app.pixi_app.screen.width/2, y:app.pixi_app.screen.height - 30}, 
+                                                     {scroll_direction:{x:0,y:app.scroll_speed}}, 
+                                                     "↓↓↓");
+
+        app.scroll_button_left = app.addScrollButton({w:30, h:50, x:30, y:app.pixi_app.screen.height/2}, 
+                                                     {scroll_direction:{x:-app.scroll_speed,y:0}}, 
+                                                     "←\n←\n←");
+
+        app.scroll_button_right = app.addScrollButton({w:30, h:50, x:app.pixi_app.screen.width - 30, y:app.pixi_app.screen.height/2}, 
+                                                      {scroll_direction:{x:app.scroll_speed,y:0}}, 
+                                                      "→\n→\n→");
         
     }
+
+    //start game loop
+    app.pixi_app.ticker.add(app.gameLoop);
+},
+
+addScrollButton(button_size, name, text){
+
+    let g = new PIXI.Graphics();
+    g.lineStyle(1, 0x000000);
+    g.beginFill(0xffffff);
+    g.drawRect(0, 0, button_size.w, button_size.h);
+    g.pivot.set(button_size.w/2, button_size.h/2);
+    g.endFill();
+    g.lineStyle(1, 0x000000);
+    g.x=button_size.x;
+    g.y=button_size.y;
+    g.interactive=true;
+    g.alpha = 0.5;
+    g.name = name;
+
+    g.on("pointerover", app.staffScreenScrollButtonOver);
+    g.on("pointerout", app.staffScreenScrollButtonOut);
+
+    let label = new PIXI.Text(text,{fontFamily : 'Arial',
+                                    fontWeight:'bold',
+                                    fontSize: 28,       
+                                    lineHeight : 14,                             
+                                    align : 'center'});
+    label.pivot.set(label.width/2, label.height/2);
+    label.x = button_size.w/2;
+    label.y = button_size.h/2-3;
+    g.addChild(label);
+
+    app.pixi_app.stage.addChild(g);
+
+    return g
 },
 
 gameLoop(delta){
-    app.movePlayer(delta);
-    app.updateOffsets(delta);    
+    if(app.pixi_mode=="subject")
+    {
+        app.movePlayer(delta);
+    }
+    
+    if(app.pixi_mode=="staff")
+    {
+         app.scrollStaff(delta);
+    }       
+
+    app.updateOffsets(delta);
 },
 
 updateZoom(){
@@ -162,6 +218,12 @@ updateOffsets(delta){
     }
 },
 
+scrollStaff(delta){
+
+    app.current_location.x += app.scroll_direction.x;
+    app.current_location.y += app.scroll_direction.y;
+},
+
 getOffset(){
     return {x:app.current_location.x * app.pixi_scale - app.pixi_app.screen.width/2,
             y:app.current_location.y * app.pixi_scale - app.pixi_app.screen.height/2};
@@ -181,8 +243,16 @@ subjectPointerUp(event){
 /**
  *scroll control for staff
  */
-staffScreenScroll(event){
+staffScreenScrollButtonOver(event){
+    event.currentTarget.alpha = 1;  
+    app.scroll_direction = event.currentTarget.name.scroll_direction;
+},
 
-   
+/**
+ *scroll control for staff
+ */
+staffScreenScrollButtonOut(event){
+    event.currentTarget.alpha = 0.5;
+    app.scroll_direction = {x:0, y:0};
 },
 
