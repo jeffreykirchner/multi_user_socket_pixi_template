@@ -48,25 +48,6 @@ setupPixiSheets(){
     //app.background_tile_tex = PIXI.Texture.from("{% static 'sprite_sheet.png' %}");
     app.background_tile_tex = app.sprite_sheet.textures["background_tile_a_1024.png"]
 
-    // app.grid_x = 11;
-    // app.grid_y = 5;
-
-    // app.grid_y_padding = 30;
-
-    // app.canvas_scale_height = app.canvas_height / app.grid_y;
-    // app.canvas_scale_width = app.canvas_width / app.grid_x;
-    // app.canvas_scale = app.canvas_scale_height /  app.house_sprite.height;
-
-    // app.pixi_loaded = true;
-    // app.setupPixiPlayers();
-
-    //layout for testing
-    //app.setupGrid();
-
-    //add background tile
-    //app.pixi_app.screen.width,
-    //app.pixi_app.screen.height,
-
     app.background = new PIXI.Graphics();
     app.background.beginFill(0xffffff);
     app.background.drawRect(0, 0, app.stage_width, app.stage_height);
@@ -86,21 +67,29 @@ setupPixiSheets(){
     );
     tilingSprite.position.set(0,0);
 
-    tilingSprite.interactive = true;
-    tilingSprite.on("pointerup", app.handleStagePointerUp);
+    
 
     app.background.addChild(tilingSprite);
 
     app.pixi_app.ticker.add(app.gameLoop);
     
+    //subject controls
     if(app.pixi_mode=="subject")
     {
+        tilingSprite.interactive = true;
+        tilingSprite.on("pointerup", app.subjectPointerUp);
+
         app.pixi_target = new PIXI.Graphics();
         app.pixi_target.lineStyle(3, 0x000000);
         app.pixi_target.alpha = 0.33;
         app.pixi_target.drawCircle(0, 0, 10);
         //app.pixi_target.scale.set(app.pixi_scale, app.pixi_scale);
         app.background.addChild(app.pixi_target)
+    }
+
+    // staff controls
+    if(app.pixi_mode=="staff"){
+        
     }
 },
 
@@ -179,19 +168,21 @@ getOffset(){
 },
 
 /**
- *pointer up on stage
+ *pointer up on subject screen
  */
- handleStagePointerUp(event){
+subjectPointerUp(event){
 
-    offset = app.getOffset();
+    let local_pos = event.data.getLocalPosition(event.currentTarget);
+    app.target_location.x = local_pos.x;
+    app.target_location.y = local_pos.y;
+    
+},
 
-    //console.log('Stage up: ' + event);
-    //app.turnOffHighlights();
-    if(app.pixi_mode=="subject")
-    {
-        let local_pos = event.data.getLocalPosition(event.currentTarget);
-        app.target_location.x = local_pos.x;
-        app.target_location.y = local_pos.y;
-    }
+/**
+ *scroll control for staff
+ */
+staffScreenScroll(event){
+
+   
 },
 

@@ -12,12 +12,15 @@
         <!-- field -->
         <div class="row">
             <div class="col">           
-                <canvas class="field" key="sd_graph" id="sd_graph_id" style="border-style: solid;border-width: 1px;"></canvas>                
+                <canvas class="field" 
+                        key="sd_graph" 
+                        id="sd_graph_id" 
+                        style="border-style: solid;border-width: 1px;"></canvas>                
             </div>
         </div>
 
         <!-- controls -->
-        <div class="row">
+        <div class="row" v-if="pixi_mode=='staff'">
             <div class="col">
                 <label for="zoom_range" 
                        class="form-label">
